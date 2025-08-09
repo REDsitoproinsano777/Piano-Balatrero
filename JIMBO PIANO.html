@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Piano Jimbo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        background: url('fondo.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+    }
+    header img {
+        max-width: 90%;
+        height: auto;
+        margin-top: 20px;
+    }
+    #piano {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 10px;
+    }
+    .key {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 150px;
+        margin: 5px;
+        background-color: rgba(255,255,255,0.9);
+        border: 2px solid black;
+        border-radius: 8px;
+        font-size: 16px;
+        color: black;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.1s, transform 0.1s;
+    }
+    .key:active,
+    .pressed {
+        background-color: rgba(0,0,0,0.3);
+        transform: scale(0.97);
+    }
+    footer {
+        margin-top: 30px;
+        padding: 10px;
+        background-color: rgba(0,0,0,0.6);
+        font-size: 14px;
+        color: white;
+    }
+    .social {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(0,0,0,0.6);
+        padding: 6px 10px;
+        border-radius: 8px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    .social a img {
+        width: 32px;
+        height: 32px;
+        display: block;
+        transition: transform 0.2s;
+        filter: invert(1); /* Invertir colores: negros → blancos */
+    }
+    .social a img:hover {
+        transform: scale(1.15);
+    }
+    @media (max-width: 600px) {
+        .key {
+            width: 60px;
+            height: 100px;
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <img src="titulo.png" alt="Piano Jimbo">
+</header>
+
+<div id="piano"></div>
+
+<footer>
+    Este proyecto no tiene fines de lucro. Los sonidos pertenecen a sus respectivos dueños y solo se usan con fines recreativos.
+</footer>
+
+<div class="social">
+    <a href="https://www.twitch.tv/red_spp" target="_blank">
+        <img src="twitch.png" alt="Twitch">
+    </a>
+    <a href="https://www.youtube.com/@red_spp4317" target="_blank">
+        <img src="youtube.png" alt="YouTube">
+    </a>
+</div>
+
+<script>
+    const keyMap = {
+        '1': 1,
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '0': 10,
+        'q': 11
+    };
+
+    const pianoDiv = document.getElementById('piano');
+
+    for (let i = 1; i <= 11; i++) {
+        const keyButton = document.createElement('div');
+        keyButton.className = 'key';
+        keyButton.textContent = 'Voice ' + i;
+        keyButton.addEventListener('click', () => {
+            pressKey(keyButton, i);
+        });
+        keyButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            pressKey(keyButton, i);
+        }, { passive: false });
+        pianoDiv.appendChild(keyButton);
+    }
+
+    document.addEventListener('keydown', (event) => {
+        const key = event.key.toLowerCase();
+        if (keyMap[key]) {
+            const index = keyMap[key];
+            const button = pianoDiv.children[index - 1];
+            pressKey(button, index);
+        }
+    });
+
+    function pressKey(button, num) {
+        button.classList.add('pressed');
+        playSound(num);
+        setTimeout(() => button.classList.remove('pressed'), 150);
+    }
+
+    function playSound(num) {
+        const audio = new Audio(`Jimbo/voice${num}.mp3`);
+        audio.currentTime = 0;
+        audio.play();
+    }
+</script>
+
+</body>
+</html>
